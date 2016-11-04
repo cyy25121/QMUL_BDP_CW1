@@ -5,9 +5,9 @@ if [[ $# != 1 ]]; then
 fi
 
 if [ $1 == "build" ]; then
-	cd pa ; make clean; make
+	cd pb ; make clean; make
 elif [ $1 == "run" ]; then
-	cd pa ; hadoop-moonshot jar dist/TwitterContentAnalysis.jar TwitterContentAnalysis /data/olympictweets2016rio out
+	cd pb ; hadoop-moonshot jar dist/TwitterTimeAnalysis.jar TwitterTimeAnalysis /data/olympictweets2016rio out
 elif [ $1 == "clean" ]; then
 	rm -rf out/
 fi
