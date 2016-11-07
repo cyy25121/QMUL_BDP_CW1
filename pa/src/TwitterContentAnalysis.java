@@ -10,7 +10,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 public class TwitterContentAnalysis {
 
-  public static void runJob(String[] input, String output) throws Exception {
+  public static void runJob1(String[] input, String output) throws Exception {
 
     Configuration conf = new Configuration();
 
@@ -27,8 +27,27 @@ public class TwitterContentAnalysis {
     job.waitForCompletion(true);
   }
 
+  public static void runJob2(String[] input, String output) throws Exception {
+
+    Configuration conf = new Configuration();
+
+    Job job = new Job(conf);
+    job.setJarByClass(TwitterContentAnalysis.class);
+    job.setMapperClass(AvgMapper.class);
+    job.setReducerClass(AvgReducer.class);
+    job.setMapOutputKeyClass(IntWritable.class);
+    job.setMapOutputValueClass(IntWritable.class);
+	job.setNumReduceTasks(1);
+    Path outputPath = new Path(output);
+    FileInputFormat.setInputPaths(job, StringUtils.join(input, ","));
+    FileOutputFormat.setOutputPath(job, outputPath);
+    outputPath.getFileSystem(conf).delete(outputPath,true);
+    job.waitForCompletion(true);
+  }
+
   public static void main(String[] args) throws Exception {
-    runJob(Arrays.copyOfRange(args, 0, args.length-1), args[args.length-1]);
+    runJob1(Arrays.copyOfRange(args, 0, args.length-2), args[args.length-2]);
+	runJob2(Arrays.copyOfRange(args, 0, args.length-2), args[args.length-1]);
   }
 
 }
