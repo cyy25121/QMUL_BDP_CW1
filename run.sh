@@ -30,7 +30,9 @@ elif [ $1 == "pc" ]; then
 	if [ $2 == "build" ]; then
 		cd pc ; make clean; make
 	elif [ $2 == "run" ]; then
-		cd pc ; hadoop-moonshot jar dist/TwitterHashtagAnalysis.jar TwitterHashtagAnalysis /data/olympictweets2016rio out
+		cd pc ; hadoop-moonshot jar dist/TweetsHashtagAnalysis.jar TweetsHashtagAnalysis /data/olympictweets2016rio out1 out2 out3 out4
+	elif [ $2 == "runl" ]; then
+		cd pc ; hadoop-moonshot jar dist/TweetsHashtagAnalysis.jar TweetsHashtagAnalysis input/olympictweets2016rio.test out1 out2 out3 out4
 	elif [ $2 == "clean" ]; then
 		rm -rf out/
 	fi
