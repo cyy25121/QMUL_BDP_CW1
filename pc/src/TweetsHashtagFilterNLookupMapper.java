@@ -17,13 +17,16 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.lang.Integer;
 
-public class TweetsHashtagLookupMapper extends Mapper<Object, Text, Text, IntWritable> {
+public class TweetsHashtagFilterNLookupMapper extends Mapper<Object, Text, Text, IntWritable> {
     private final IntWritable one = new IntWritable(1);
     private Text THashtag = new Text();
+	private SimpleDateFormat ft = new SimpleDateFormat ("yyyyMMdd");
 	private String pattern1 = "(?<epochtime>\\d+);(\\d+);(?<tweets>.+);(.+)";
 	private String pattern2 = "(?<hashtag>#[\\w]+)+";
+	private String pattern3 = "^(go|team)(?<country>[a-z]+)";
 	private Pattern r1 = Pattern.compile(pattern1);
 	private Pattern r2 = Pattern.compile(pattern2);
+	private Pattern r3 = Pattern.compile(pattern3, Pattern.CASE_INSENSITIVE);
 	private Hashtable<String, String> country;
 
 	public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
@@ -32,10 +35,15 @@ public class TweetsHashtagLookupMapper extends Mapper<Object, Text, Text, IntWri
   	  	if(m1.find()){
 			Matcher m2 = r2.matcher(m1.group("tweets"));
 			while(m2.find()){
-				String cty = country.get(m2.group("hashtag").toLowerCase().replaceAll("#", ""));
-				if(cty != null){
-					THashtag.set(cty);
-					context.write(THashtag, one);
+				// go/team filter
+				Matcher m3 = r3.matcher(m2.group("hashtag").toLowerCase().replaceAll("#", ""));
+				if(m3.find()){
+					// hashtable look up
+					String cty = country.get(m3.group("country"));
+					if(cty != null){
+						THashtag.set(cty);
+						context.write(THashtag, one);
+					}
 				}
 			}
   	  	}

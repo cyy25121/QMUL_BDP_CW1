@@ -3,3 +3,5 @@ result/
 tmp/
 input/
 .Rhistory
+.DS_Store
+report/

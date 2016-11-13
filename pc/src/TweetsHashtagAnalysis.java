@@ -101,11 +101,48 @@ public class TweetsHashtagAnalysis {
 		job.waitForCompletion(true);
 	}
 
+	public static void runJob5(String[] input, String output) throws Exception {
+
+		Configuration conf = new Configuration();
+
+		Job job = new Job(conf);
+		job.setJarByClass(TweetsHashtagAnalysis.class);
+		job.setMapperClass(TweetsHashtagFilterNLookupMapper.class);
+		job.setReducerClass(IntSumReducer.class);
+		job.setMapOutputKeyClass(Text.class);
+		job.setMapOutputValueClass(IntWritable.class);
+		job.addCacheFile(new Path("input/countrycode.csv").toUri());
+		Path outputPath = new Path(output);
+		FileInputFormat.setInputPaths(job, StringUtils.join(input, ","));
+		FileOutputFormat.setOutputPath(job, outputPath);
+		outputPath.getFileSystem(conf).delete(outputPath,true);
+		job.waitForCompletion(true);
+	}
+
+	public static void runJob6(String[] input, String output) throws Exception {
+
+		Configuration conf = new Configuration();
+
+		Job job = new Job(conf);
+		job.setJarByClass(TweetsHashtagAnalysis.class);
+		job.setMapperClass(TweetsHashtagSubstrMapper.class);
+		job.setReducerClass(IntSumReducer.class);
+		job.setMapOutputKeyClass(Text.class);
+		job.setMapOutputValueClass(IntWritable.class);
+		Path outputPath = new Path(output);
+		FileInputFormat.setInputPaths(job, StringUtils.join(input, ","));
+		FileOutputFormat.setOutputPath(job, outputPath);
+		outputPath.getFileSystem(conf).delete(outputPath,true);
+		job.waitForCompletion(true);
+	}
+
 	public static void main(String[] args) throws Exception {
-		runJob1(Arrays.copyOfRange(args, 0, args.length-4), args[args.length-4]);
-		runJob2(Arrays.copyOfRange(args, 0, args.length-4), args[args.length-3]);
-		runJob3(Arrays.copyOfRange(args, 0, args.length-4), args[args.length-2]);
-		runJob4(Arrays.copyOfRange(args, 0, args.length-4), args[args.length-1]);
+		//runJob1(Arrays.copyOfRange(args, 0, args.length-6), args[args.length-6]);
+		//runJob2(Arrays.copyOfRange(args, 0, args.length-6), args[args.length-5]);
+		//runJob3(Arrays.copyOfRange(args, 0, args.length-6), args[args.length-4]);
+		//runJob4(Arrays.copyOfRange(args, 0, args.length-6), args[args.length-3]);
+		//runJob5(Arrays.copyOfRange(args, 0, args.length-6), args[args.length-2]);
+		runJob6(Arrays.copyOfRange(args, 0, args.length-6), args[args.length-1]);
 	}
 
 }

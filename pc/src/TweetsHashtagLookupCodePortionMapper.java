@@ -71,13 +71,15 @@ public class TweetsHashtagLookupCodePortionMapper extends Mapper<Object, Text, T
 				context.getCounter(CustomCounters.NUM_COUNTRIES).increment(1);
 
 				String [] fields = line.split(",");
-				if (fields.length == 3){
+				if (fields.length == 4){
 					country.put(fields[1].toLowerCase(), fields[0]);
 					country.put(fields[2].toLowerCase(), fields[0]);
+					country.put(fields[3].toLowerCase(), fields[0]);
 					country.put(fields[0].replaceAll("[,.&() \"]", "").toLowerCase(), fields[0]);
 
 					country_code_only.put(fields[1].toLowerCase(), fields[0]);
 					country_code_only.put(fields[2].toLowerCase(), fields[0]);
+					country_code_only.put(fields[3].toLowerCase(), fields[0]);
 				}
 			}
 		} catch (IOException e1){

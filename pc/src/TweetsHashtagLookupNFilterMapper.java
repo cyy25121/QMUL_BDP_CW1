@@ -76,9 +76,10 @@ public class TweetsHashtagLookupNFilterMapper extends Mapper<Object, Text, Text,
 				context.getCounter(CustomCounters.NUM_COUNTRIES).increment(1);
 
 				String [] fields = line.split(",");
-				if (fields.length == 3){
+				if (fields.length == 4){
 					country.put(fields[1].toLowerCase(), fields[0]);
 					country.put(fields[2].toLowerCase(), fields[0]);
+					country.put(fields[3].toLowerCase(), fields[0]);
 					country.put(fields[0].replaceAll("[,.&() \"]", "").toLowerCase(), fields[0]);
 				}
 			}
